@@ -41,7 +41,7 @@ fun SegitigaView() {
 
     var luas =
         if (base.isNotEmpty() && height.isNotEmpty()) {
-            hitungLuas(base.toDouble(), height.toDouble())
+            hitungLuas(base.toDoubleOrNull() ?: 0.0, height.toDoubleOrNull() ?: 0.0)
         } else {
             0.0
         }
@@ -64,7 +64,11 @@ fun SegitigaView() {
 
         CustomTextField(
             value = base,
-            onValueChanged = {base = it},
+            onValueChanged = {
+                if (it.isNumeric()) {
+                    base = it
+                }
+            },
             text = "Base",
             keyboardOptions = KeyboardOptions.Default.copy(
                 keyboardType = KeyboardType.Number,
@@ -77,7 +81,11 @@ fun SegitigaView() {
 
         CustomTextField(
             value = height,
-            onValueChanged = {height = it},
+            onValueChanged = {
+                if (it.isNumeric()) {
+                    base = it
+                }
+            },
             text = "Height",
             keyboardOptions = KeyboardOptions.Default.copy(
                 keyboardType = KeyboardType.Number,
@@ -105,8 +113,7 @@ fun SegitigaView() {
 fun hitungLuas(
     base: Double,
     height: Double
-): Double
-{
+): Double {
     var Luas = (base * height) / 2
     return Luas
 }
@@ -119,16 +126,16 @@ fun CustomTextField(
     text: String,
     keyboardOptions: KeyboardOptions,
     modifier: Modifier = Modifier
-){
+) {
     OutlinedTextField(
         value = value,
         onValueChange = onValueChanged,
         label = {
-                    Text(
-                        text = text,
-                        style = TextStyle( color = Color.Blue)
-                    )
-                },
+            Text(
+                text = text,
+                style = TextStyle(color = Color.Blue)
+            )
+        },
         keyboardOptions = keyboardOptions,
         modifier = modifier,
         shape = RoundedCornerShape(40.dp),
@@ -139,7 +146,7 @@ fun CustomTextField(
     )
 }
 
-@Preview (showSystemUi = true, showBackground = true)
+@Preview(showSystemUi = true, showBackground = true)
 @Composable
 fun SegitigaPreview() {
     SegitigaView()

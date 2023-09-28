@@ -59,7 +59,7 @@ fun AgeCalculatorView() {
     val scope = rememberCoroutineScope()
 
     Scaffold(
-        snackbarHost = {SnackbarHost(snackbarHostState)},
+        snackbarHost = { SnackbarHost(snackbarHostState) },
         content = {
             Column(
                 modifier = Modifier
@@ -78,7 +78,7 @@ fun AgeCalculatorView() {
 
                 CustomTextFieldPink(
                     value = name,
-                    onValueChanged = {name = it},
+                    onValueChanged = { name = it },
                     text = "Name",
                     keyboardOptions = KeyboardOptions.Default.copy(
                         keyboardType = KeyboardType.Text,
@@ -91,7 +91,11 @@ fun AgeCalculatorView() {
 
                 CustomTextFieldPink(
                     value = year,
-                    onValueChanged = {year = it},
+                    onValueChanged = {
+                        if (it.isNumeric()) {
+                            year = it
+                        }
+                    },
                     text = "Year",
                     keyboardOptions = KeyboardOptions.Default.copy(
                         keyboardType = KeyboardType.Number,
@@ -104,10 +108,10 @@ fun AgeCalculatorView() {
 
                 Button(
                     onClick = {
-                        if (year.toInt() > 0){
+                        if ((year.toIntOrNull() ?: 0) > 0) {
                             scope.launch {
                                 snackbarHostState.showSnackbar(
-                                    "Hi, $name! Your age is ${2023-year.toInt()} years"
+                                    "Hi, $name! Your age is ${2023 - year.toInt()} years"
                                 )
                                 clicked = true
                             }
@@ -125,7 +129,7 @@ fun AgeCalculatorView() {
                     )
                 }
 
-                if(clicked) {
+                if (clicked) {
                     OutlinedCard(
                         colors = CardDefaults.cardColors(
                             containerColor = MaterialTheme.colorScheme.surface,
@@ -136,7 +140,7 @@ fun AgeCalculatorView() {
                         shape = RoundedCornerShape(40.dp)
                     ) {
                         Text(
-                            text = "Hi, $name! Your age is ${2023-year.toInt()} years",
+                            text = "Hi, $name! Your age is ${2023 - (year.toIntOrNull() ?: 0)} years",
                             modifier = Modifier
                                 .padding(16.dp),
                             textAlign = TextAlign.Center,
@@ -157,14 +161,14 @@ fun CustomTextFieldPink(
     text: String,
     keyboardOptions: KeyboardOptions,
     modifier: Modifier = Modifier
-){
+) {
     OutlinedTextField(
         value = value,
         onValueChange = onValueChanged,
         label = {
             Text(
                 text = text,
-                style = TextStyle( color = Color.Magenta)
+                style = TextStyle(color = Color.Magenta)
             )
         },
         keyboardOptions = keyboardOptions,

@@ -30,6 +30,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.text.isDigitsOnly
 import com.example.week3.R
 
 @Composable
@@ -38,8 +39,8 @@ fun BMIView() {
     var weight by rememberSaveable { mutableStateOf("") }
     var height by rememberSaveable { mutableStateOf("") }
 
-    var isWeightValid by rememberSaveable { mutableStateOf(false) }
-    var isHeightValid by rememberSaveable { mutableStateOf(false) }
+    var isWeightValid by rememberSaveable { mutableStateOf(true) }
+    var isHeightValid by rememberSaveable { mutableStateOf(true) }
     val openAlertDialog = remember { mutableStateOf(false) }
 
     Column(
@@ -58,7 +59,11 @@ fun BMIView() {
 
         CustomNumberInput(
             value = weight,
-            onValueChanged = {weight = it},
+            onValueChanged = {
+                if (it.isNumeric()) {
+                    weight = it
+                }
+            },
             text = "Weight in Kg",
             keyboardOptions = KeyboardOptions.Default.copy(
                 keyboardType = KeyboardType.Number,
@@ -73,7 +78,11 @@ fun BMIView() {
 
         CustomNumberInput(
             value = height,
-            onValueChanged = {height = it},
+            onValueChanged = {
+                if (it.isNumeric()) {
+                    height = it
+                }
+            },
             text = "Height in Cm",
             keyboardOptions = KeyboardOptions.Default.copy(
                 keyboardType = KeyboardType.Number,
@@ -88,8 +97,8 @@ fun BMIView() {
 
         Button(
             onClick = {
-                isWeightValid = isValid(weight.toInt())
-                isHeightValid = isValid(height.toInt())
+                isWeightValid = isValid(weight.toIntOrNull() ?: 0)
+                isHeightValid = isValid(height.toIntOrNull() ?: 0)
                 openAlertDialog.value = true
             },
             modifier = Modifier
@@ -103,13 +112,14 @@ fun BMIView() {
             )
         }
 
-        if(isHeightValid && isWeightValid && openAlertDialog.value) {
-            val result = hitungBMI(height.toDouble()/100, weight.toDouble())
+        if (isHeightValid && isWeightValid && openAlertDialog.value) {
+            val result =
+                hitungBMI((height.toDoubleOrNull() ?: 0.0) / 100, weight.toDoubleOrNull() ?: 0.0)
             val roundResult = String.format("%.1f", result)
 
             var BMI: String
 
-            if (result < 18.5){
+            if (result < 18.5) {
                 BMI = "Underweight"
             } else if (result > 18.5 && result < 24.9) {
                 BMI = "Normal"
@@ -129,7 +139,7 @@ fun BMIView() {
                 text = {
                     Text(
                         text = """
-                            Your Height : ${height.toDouble()/100} m
+                            Your Height : ${height.toDouble() / 100} m
                             Your Weight : $weight kg
                             Your BMI Score : $roundResult
                             You are $BMI
@@ -150,7 +160,11 @@ fun BMIView() {
     }
 }
 
-fun isValid(value: Int):Boolean {
+fun String.isNumeric(): Boolean { // Cek apakah Inputnya Angka
+    return this.all { it.isDigit() }
+}
+
+fun isValid(value: Int): Boolean {
     var TF: Boolean = value > 0
     return TF
 }
@@ -176,7 +190,7 @@ fun CustomNumberInput(
     OutlinedTextField(
         value = value,
         onValueChange = onValueChanged,
-        label = { Text(text = text)},
+        label = { Text(text = text) },
         keyboardOptions = keyboardOptions,
         modifier = modifier,
         isError = !isNumberValid,
@@ -189,7 +203,7 @@ fun CustomNumberInput(
 
     if (!isNumberValid) {
         Text(
-            text =  errorText,
+            text = errorText,
             color = Color.Red,
             modifier = Modifier
                 .fillMaxWidth()
@@ -198,7 +212,7 @@ fun CustomNumberInput(
     }
 }
 
-@Preview (showBackground = true, showSystemUi = true)
+@Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun BMIPreview() {
     BMIView()

@@ -63,7 +63,7 @@ fun AVGCalculatorView() {
     val scope = rememberCoroutineScope()
 
     Scaffold(
-        snackbarHost = {SnackbarHost(snackbarHostState)},
+        snackbarHost = { SnackbarHost(snackbarHostState) },
         content = {
             Column(
                 modifier = Modifier
@@ -95,7 +95,11 @@ fun AVGCalculatorView() {
 
                 CustomTextFieldPurple(
                     value = nilai1,
-                    onValueChanged = {nilai1 = it},
+                    onValueChanged = {
+                        if (it.isNumeric()) {
+                            nilai1 = it
+                        }
+                    },
                     text = "Rafi's Score",
                     keyboardOptions = KeyboardOptions.Default.copy(
                         keyboardType = KeyboardType.Number,
@@ -108,7 +112,11 @@ fun AVGCalculatorView() {
 
                 CustomTextFieldPurple(
                     value = nilai2,
-                    onValueChanged = {nilai2 = it},
+                    onValueChanged = {
+                        if (it.isNumeric()) {
+                            nilai2 = it
+                        }
+                    },
                     text = "Kevin's Score",
                     keyboardOptions = KeyboardOptions.Default.copy(
                         keyboardType = KeyboardType.Number,
@@ -121,7 +129,11 @@ fun AVGCalculatorView() {
 
                 CustomTextFieldPurple(
                     value = nilai3,
-                    onValueChanged = {nilai3 = it},
+                    onValueChanged = {
+                        if (it.isNumeric()) {
+                            nilai3 = it
+                        }
+                    },
                     text = "Bahar's Score",
                     keyboardOptions = KeyboardOptions.Default.copy(
                         keyboardType = KeyboardType.Number,
@@ -134,8 +146,12 @@ fun AVGCalculatorView() {
 
                 Button(
                     onClick = {
-                        if (nilai1.isNotBlank() && nilai2.isNotBlank() && nilai3.isNotBlank()){
-                            result = Average(nilai1.toFloat(), nilai2.toFloat(), nilai3.toFloat())
+                        if (nilai1.isNotBlank() && nilai2.isNotBlank() && nilai3.isNotBlank()) {
+                            result = Average(
+                                ((nilai1.toFloatOrNull() ?: 0f)),
+                                (nilai2.toFloatOrNull() ?: 0f),
+                                (nilai3.toFloatOrNull() ?: 0f)
+                            )
                             if (result < 70) {
                                 scope.launch {
                                     snackbarHostState.showSnackbar(
@@ -197,14 +213,14 @@ fun CustomTextFieldPurple(
     text: String,
     keyboardOptions: KeyboardOptions,
     modifier: Modifier = Modifier
-){
+) {
     OutlinedTextField(
         value = value,
         onValueChange = onValueChanged,
         label = {
             Text(
                 text = text,
-                style = TextStyle( color = Purple40)
+                style = TextStyle(color = Purple40)
             )
         },
         keyboardOptions = keyboardOptions,
@@ -225,7 +241,7 @@ fun Average(
     return (nilai1 + nilai2 + nilai3) / 3
 }
 
-@Preview (showBackground = true, showSystemUi = true)
+@Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun AVGCalculatorPreview() {
     AVGCalculatorView()
