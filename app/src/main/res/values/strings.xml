@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">Week3</string>
+    <string name="title_activity_bmiactivity">BMIActivity</string>
+    <string name="title_activity_age_calculator">AgeCalculatorActivity</string>
+    <string name="title_activity_avgcalculator">AVGCalculatorActivity</string>
+</resources>
