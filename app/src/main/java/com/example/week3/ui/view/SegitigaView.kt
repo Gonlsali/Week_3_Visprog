@@ -83,7 +83,7 @@ fun SegitigaView() {
             value = height,
             onValueChanged = {
                 if (it.isNumeric()) {
-                    base = it
+                    height = it
                 }
             },
             text = "Height",
