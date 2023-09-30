@@ -96,7 +96,7 @@ fun AVGCalculatorView() {
                 CustomTextFieldPurple(
                     value = nilai1,
                     onValueChanged = {
-                        if (it.isNumeric()) {
+                        if (it.isFloat()) {
                             nilai1 = it
                         }
                     },
@@ -113,7 +113,7 @@ fun AVGCalculatorView() {
                 CustomTextFieldPurple(
                     value = nilai2,
                     onValueChanged = {
-                        if (it.isNumeric()) {
+                        if (it.isFloat()) {
                             nilai2 = it
                         }
                     },
@@ -130,7 +130,7 @@ fun AVGCalculatorView() {
                 CustomTextFieldPurple(
                     value = nilai3,
                     onValueChanged = {
-                        if (it.isNumeric()) {
+                        if (it.isFloat()) {
                             nilai3 = it
                         }
                     },
@@ -231,6 +231,16 @@ fun CustomTextFieldPurple(
             unfocusedBorderColor = Purple40
         )
     )
+}
+
+fun String.isFloat(): Boolean {
+    // Cek apakah Inputnya adalah angka atau angka desimal
+    return try {
+        this.toFloat() // Cobakan untuk mengonversi string ke Double
+        true
+    } catch (e: NumberFormatException) {
+        false
+    }
 }
 
 fun Average(

@@ -97,8 +97,8 @@ fun BMIView() {
 
         Button(
             onClick = {
-                isWeightValid = isValid(weight.toIntOrNull() ?: 0)
-                isHeightValid = isValid(height.toIntOrNull() ?: 0)
+                isWeightValid = isValid(weight.toDoubleOrNull() ?: 0.0)
+                isHeightValid = isValid(height.toDoubleOrNull() ?: 0.0)
                 openAlertDialog.value = true
             },
             modifier = Modifier
@@ -116,6 +116,7 @@ fun BMIView() {
             val result =
                 hitungBMI((height.toDoubleOrNull() ?: 0.0) / 100, weight.toDoubleOrNull() ?: 0.0)
             val roundResult = String.format("%.1f", result)
+            val roundHeight = String.format("%.2f", (height.toDouble() / 100))
 
             var BMI: String
 
@@ -139,7 +140,7 @@ fun BMIView() {
                 text = {
                     Text(
                         text = """
-                            Your Height : ${height.toDouble() / 100} m
+                            Your Height : $roundHeight m
                             Your Weight : $weight kg
                             Your BMI Score : $roundResult
                             You are $BMI
@@ -160,11 +161,17 @@ fun BMIView() {
     }
 }
 
-fun String.isNumeric(): Boolean { // Cek apakah Inputnya Angka
-    return this.all { it.isDigit() }
+fun String.isNumeric(): Boolean {
+    // Cek apakah Inputnya adalah angka atau angka desimal
+    return try {
+        this.toDouble() // Cobakan untuk mengonversi string ke Double
+        true
+    } catch (e: NumberFormatException) {
+        false
+    }
 }
 
-fun isValid(value: Int): Boolean {
+fun isValid(value: Double): Boolean {
     var TF: Boolean = value > 0
     return TF
 }

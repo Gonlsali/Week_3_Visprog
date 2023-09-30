@@ -114,8 +114,7 @@ fun hitungLuas(
     base: Double,
     height: Double
 ): Double {
-    var Luas = (base * height) / 2
-    return Luas
+    return (base * height) / 2
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
